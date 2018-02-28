@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>IA</title>
+    <style>
+            body { margin: 0; }
+            
+            button.css3button {
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 14px;
+                color: #050505;
+                padding: 10px 20px;
+                background: -moz-linear-gradient(
+                    top,
+                    #ffffff 0%,
+                    #c7d95f 50%,
+                    #add136 50%,
+                    #6d8000);
+                background: -webkit-gradient(
+                    linear, left top, left bottom,
+                    from(#ffffff),
+                    color-stop(0.50, #c7d95f),
+                    color-stop(0.50, #add136),
+                    to(#6d8000));
+                -moz-border-radius: 14px;
+                -webkit-border-radius: 14px;
+                border-radius: 14px;
+                border: 1px solid #6d8000;
+                -moz-box-shadow:
+                    0px 1px 3px rgba(000,000,000,0.5),
+                    inset 0px 0px 2px rgba(255,255,255,1);
+                -webkit-box-shadow:
+                    0px 1px 3px rgba(000,000,000,0.5),
+                    inset 0px 0px 2px rgba(255,255,255,1);
+                box-shadow:
+                    0px 1px 3px rgba(000,000,000,0.5),
+                    inset 0px 0px 2px rgba(255,255,255,1);
+                text-shadow:
+                    0px -1px 0px rgba(000,000,000,0.2),
+                    0px 1px 0px rgba(255,255,255,0.4);
+            }
+        </style>
+    </head>
+    <body id="body">
+        <center>
+            <br>
+            
+            <div id="resultado"></div>
+
+            <br>
+            <textarea cols="30" rows="5" id="entrada">
+        0.1, 0.4, 0.7
+        0.3, 0.7, 0.2
+        0.6, 0.9, 0.8
+        0.5, 0.7, 0.1
+            </textarea> <br>
+            <textarea cols="30" rows="2" id="saida">
+        -1, 1, 1, -1
+            </textarea><br>
+            <button type="button" id="treinar" class="css3button"> Treinar </button><br><br>
+            <textarea cols="30" rows="5" id="teste">
+        0.1, 0.4, 0.7
+        0.3, 0.7, 0.2
+        0.6, 0.9, 0.8
+        0.5, 0.7, 0.1
+            </textarea> <br>
+            <button type="button" id="testar" class="css3button"> Testar </button>
+        <br>
+        </center>
+    <script src="js/perceptron.js"></script>
+    <script src="js/tratamento.js"></script>
+    <script>
+        // console.log('\nA ou B?\n');
+        // amostras: um total de 4 amostras
+        // var entradas = [[0.1, 0.4, 0.7], [0.3, 0.7, 0.2],[0.6, 0.9, 0.8], [0.5, 0.7, 0.1]];
+        // var testes   = [[0.1, 0.4, 0.7], [0.3, 0.7, 0.2],[0.6, 0.9, 0.8], [0.5, 0.7, 0.1]];
+        // console.log(entradas);
+        // saídas desejadas de cada amostra
+        // var saidas = [1, 1, -1, -1];
+        // cria uma rede Perceptron
+        onload=(()=>{
+            var rede;
+            var tratamento = new Tratamento();
+
+            document.getElementById("treinar").addEventListener("click",()=>{
+                
+                var entradas = tratamento.tratarMatrizes(document.getElementById("entrada").value);
+                var saidas   = tratamento.tratarVetor(document.getElementById("saida").value);
+
+                rede = new Perceptron(entradas, saidas,0.1,1000,-1);
+                rede.treinar().then((result)=>{
+                    tratamento.escrever("Treinado com sucesso!",true);
+                });
+                
+            });
+            document.getElementById("testar").addEventListener("click",()=>{
+                if(rede!=null){
+                tratamento.escrever("",true);
+                var testes = tratamento.tratarMatrizes(document.getElementById("teste").value);
+                console.log(testes);
+                for (teste of testes){
+                    rede.testar(teste, 'A', 'B');
+                }
+                }else{
+                    alert("Treine antes de testar!!!");
+                }
+            });
+        })    
+    </script>
+</body>
+</html>
